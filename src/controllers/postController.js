@@ -1,7 +1,6 @@
 const { toFile } = require("@imagekit/nodejs");
 const ImageKit = require("@imagekit/nodejs");
 const postModel = require("../models/postModel");
-const jwt = require("jsonwebtoken")
 
 
 const imageKit = new ImageKit({
@@ -10,21 +9,7 @@ const imageKit = new ImageKit({
 async function createPostController (req, res){
     console.log(req.body, req.file);
 
-    const token = req.cookies.token
-
-    if(!token){
-        res.status(404).json({
-            message: "Token not provided, Unathorized acces"
-        })
-    }
-
-   try{
-     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-   }catch(err){
-    res.status(401).json({
-        message: "User is not Unathorized"
-    })
-   }
+   
 
     const file = await imageKit.files.upload({
         file: await toFile(Buffer.from(req.file.buffer), "file"),
@@ -35,7 +20,7 @@ async function createPostController (req, res){
      const post = await postModel.create({
         caption: req.body.caption,
         imageUrl: file.url,
-        user: decoded.id
+        user: req.user.id
     })
 
     res.status(201).json({
@@ -44,17 +29,8 @@ async function createPostController (req, res){
     })
 }
 async function getPostController (req, res){
-    const token = req.cookies.token
-    let decoded;
-    try{
-     decoded = jwt.verify(token, process.env.JWT_SECRET )
-    }catch(err){
-        return res.status(401).json({
-            message: "Token invalid"
-        })
-    }
 
-    const userId = decoded.id
+    const userId = req.user.id
 
     const posts = await postModel.find({
         user: userId
@@ -66,7 +42,36 @@ async function getPostController (req, res){
     })
 }
 
+
+async function getPostDetails(req, res){
+    
+
+    const userId= req.user.id
+    const postId = req.params.postId
+
+    const post = await postModel.findOne(postId)
+    if(!post){
+        return res.status(404).json({
+            message: "post not found"
+        })
+    }
+
+    const isValidUser = post.user.toString() === userId;
+
+    if(!isValidUser){
+        return res.status(403).json({
+            message: "Forbidden content"
+        })
+    }
+
+    res.status(400).json({
+        message: "Post fetched successfully",
+        post
+    })
+}
+
 module.exports = {
     createPostController,
-    getPostController
+    getPostController,
+    getPostDetails
 };
