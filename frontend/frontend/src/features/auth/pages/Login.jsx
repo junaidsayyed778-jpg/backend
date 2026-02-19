@@ -1,13 +1,42 @@
 import { Link } from "react-router-dom"
 import "../styles/form.scss"
-const Login = () => {
+import axios from "axios";
+import { useState } from "react";
+ const  Login = () => {
+
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
+    async function handleSubmit(e){
+        e.preventDefault();
+
+        try{
+        const res = await axios.post(
+            "http://localhost:3000/api/auth/login",{
+                username,
+                password
+            },{
+                withCredentials:true
+            }
+        );
+        console.log(res.data);
+        setUsername("");
+        setPassword("");
+    }catch(err){
+        if(err.response){
+            alert(err.response.data.message)
+        }else{
+            alert ("Something went wrong")
+        }
+    }
+    }
   return (
   <main>
     <div className="form-container">
         <h1>Login</h1>
-        <form action="">
-            <input type="text" name='username' placeholder='Enter username' />
-            <input type="password" name='password' placeholder='Enter password'/>
+        <form onSubmit={handleSubmit}>
+            <input onInput={(e) => {setUsername(e.target.value)}} type="text" name='username' placeholder='Enter username' />
+            <input onInput={(e) => {setPassword(e.target.value)}} type="password" name='password' placeholder='Enter password'/>
             <button type='submit'>Login</button>
         </form>
         <p>Don't have an acount <Link className="toggleAuthForm" to="/register">Register</Link></p>

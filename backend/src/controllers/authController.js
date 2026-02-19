@@ -15,8 +15,8 @@ const bcrypt = require("bcrypt")
     });
   }
 
-  const hash = bcrypt.hash(password, 10)
-  const user = userModel.create({
+  const hash =await bcrypt.hash(password, 10)
+  const user =await userModel.create({
     username,
     email,
     password: hash,
