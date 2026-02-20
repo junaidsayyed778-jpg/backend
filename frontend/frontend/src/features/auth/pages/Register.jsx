@@ -1,38 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios"
+import axios from "axios";
 
 const Register = () => {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const [ username, setUsername] = useState("")
-  const [ email, setEmail] = useState("")
-  const [ password, setPassword] = useState("")
-
-  async function handleSubmit(e){
-
+  async function handleSubmit(e) {
     e.preventDefault();
-    try{
-        const res = await axios.post(
-            "http://localhost:3000/api/auth/register",{
-                username,
-                email,
-                password
-            },{
-                withCredentials:true
-            }
-        );
-        console.log(res.data);
-        setUsername("");
-        setEmail("");
-        setPassword("");
-    }catch(err){
-        if(err.response){
-            alert(err.response.data.message)
-        }else{
-            alert ("Something went wrong")
-        }
-    }
-
+    setUsername("");
+    setEmail("");
+    setPassword("");
   }
 
   return (
@@ -64,7 +43,7 @@ const Register = () => {
             name="password"
             placeholder="Enter password"
           />
-          <button type="submit" >Register</button>
+          <button type="submit">Register</button>
         </form>
         <p>
           Already have an acount?{" "}

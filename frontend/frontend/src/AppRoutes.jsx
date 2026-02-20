@@ -8,6 +8,7 @@ function AppRoutes() {
   return (
  
     <Routes>
+      <Route path="/" element={<h1>welcome to the App</h1>} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
     </Routes>
