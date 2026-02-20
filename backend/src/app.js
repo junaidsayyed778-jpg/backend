@@ -2,12 +2,14 @@ const cookieParser = require("cookie-parser");
 const express = require("express");
 const authRoutes = require("./routes/authRoutes");
 const postRoutes = require("./routes/postRoutes");
-const userRoutes = require("./routes/userRoutes")
+const userRoutes = require("./routes/userRoutes");
+const morgan = require("morgan")
 const cors = require("cors");
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan("dev"));
 app.use(cors(
    {
   origin: "http://localhost:5173",  

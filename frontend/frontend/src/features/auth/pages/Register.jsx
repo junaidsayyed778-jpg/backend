@@ -12,6 +12,8 @@ const Register = () => {
     setUsername("");
     setEmail("");
     setPassword("");
+
+    
   }
 
   return (

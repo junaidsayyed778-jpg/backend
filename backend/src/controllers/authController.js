@@ -42,7 +42,8 @@ const bcrypt = require("bcrypt")
         username: (await user).username,
         bio: (await user).bio,
         profileImage: (await user).profileImage
-    }
+    },
+    token: token
   })
 };
 
@@ -92,7 +93,22 @@ const bcrypt = require("bcrypt")
 
  }
 
+ async function getMeController(req, res){
+    const userId = req.user.id
+    const user = await userModel.findById(userId);
+
+    res.status(200).json({
+        user:{
+            username: user.username,
+            email: user.email,
+            bio: user.bio,
+            profileImage: user.profileImage
+        }
+    })
+ }
+
  module.exports = {
     registerController,
-    loginCotroller
+    loginCotroller,
+    getMeController
  }
