@@ -1,4 +1,5 @@
 const followModel = require("../models/followModel")
+const postModel = require("../models/postModel")
 
 async function followUserController(req, res){
     const followerUsername = req.user.username

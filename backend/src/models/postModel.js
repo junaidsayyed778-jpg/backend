@@ -6,9 +6,9 @@ const postSchema = new mongoose.Schema({
         default: ""
     },
 
-    imgUrl:{
+    imageUrl:{
         type: String,
-        required: [true, "Image is required for creating for post"]
+        required: [false, "Image is required for creating for post"]
     },
     user:{
         ref: "user",

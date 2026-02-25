@@ -13,11 +13,13 @@ const userSchema = new mongoose.Schema({
     },
     password:{
         type: String,
-        required: [true, "Oassword is required"]
+        required: [true, "Oassword is required"],
+        select: false
     },
     bio: String,
     profileImage: {
-        type: String
+        type: String,
+        default: "https://ik.imagekit.io/tdmxuofyxu/Screenshot%202026-01-28%20150645.png?updatedAt=1771068347982"
     },
     followers:[
         {

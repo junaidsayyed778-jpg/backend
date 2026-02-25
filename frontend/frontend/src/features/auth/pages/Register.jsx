@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
 const Register = () => {
   const [username, setUsername] = useState("");
@@ -45,7 +44,7 @@ const Register = () => {
             name="password"
             placeholder="Enter password"
           />
-          <button type="submit">Register</button>
+          <button className="primary-button" type="submit">Register</button>
         </form>
         <p>
           Already have an acount?{" "}

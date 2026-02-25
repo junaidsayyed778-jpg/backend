@@ -1,0 +1,309 @@
+// style/feed.scss
+
+// ===== VARIABLES =====
+$bg-primary: #121212;
+$bg-secondary: #1e1e1e;
+$bg-hover: #2a2a2a;
+$text-primary: #f5f5f5;
+$text-secondary: #b0b0b0;
+$accent: #0095f6;
+$border: #333;
+$shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+$radius: 8px;
+$transition: all 0.2s ease;
+
+// ===== MIXINS =====
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin responsive-feed {
+  width: 100%;
+  max-width: 614px;
+  margin: 0 auto;
+}
+
+// ===== BASE =====
+.feed-page {
+  min-height: 100vh;
+  background: $bg-primary;
+  color: $text-primary;
+  padding: 24px 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.feed {
+  @include responsive-feed;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+// ===== POST CARD =====
+.posts {
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: $shadow;
+  transition: $transition;
+
+  &:hover {
+    border-color: #444;
+  }
+
+  // Post Image
+  img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    background: #000;
+  }
+
+  // Header: Avatar + Username + Menu
+  .user-header {
+    @include flex-center;
+    padding: 12px 16px;
+    gap: 12px;
+    border-bottom: 1px solid $border;
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid $accent;
+      flex-shrink: 0;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 14px;
+      color: $text-primary;
+      flex: 1;
+    }
+
+    .more-btn {
+      background: none;
+      border: none;
+      color: $text-primary;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: $transition;
+
+      &:hover {
+        background: $bg-hover;
+      }
+    }
+  }
+
+  // Action Buttons: Like, Comment, Share, Save
+  .actions {
+    @include flex-center;
+    padding: 8px 12px;
+    gap: 16px;
+
+    button {
+      background: none;
+      border: none;
+      color: $text-primary;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 4px;
+      transition: $transition;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      &:hover {
+        color: $accent;
+        transform: scale(1.1);
+      }
+
+      &.liked {
+        color: #ed4956;
+      }
+    }
+
+    .save-btn {
+      margin-left: auto;
+    }
+  }
+
+  // Likes Count
+  .likes {
+    padding: 0 16px 8px;
+    font-weight: 600;
+    font-size: 14px;
+    color: $text-primary;
+  }
+  .like{
+    color: red;
+  }
+
+  // Caption
+  .caption {
+    padding: 0 16px 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: $text-primary;
+
+    span {
+      font-weight: 600;
+      margin-right: 6px;
+      color: $text-primary;
+    }
+
+    .timestamp {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: $text-secondary;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+  }
+
+  // Comments Preview
+  .comments-preview {
+    padding: 0 16px 12px;
+    font-size: 14px;
+    color: $text-secondary;
+
+    .view-all {
+      color: $text-secondary;
+      text-decoration: none;
+      margin-left: 4px;
+
+      &:hover {
+        text-decoration: underline;
+        color: $text-primary;
+      }
+    }
+  }
+
+  // Add Comment Input
+  .add-comment {
+    @include flex-center;
+    padding: 12px 16px;
+    border-top: 1px solid $border;
+    gap: 12px;
+
+    input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: $text-primary;
+      font-size: 14px;
+      outline: none;
+      padding: 4px 0;
+
+      &::placeholder {
+        color: $text-secondary;
+      }
+    }
+
+    .post-btn {
+      background: none;
+      border: none;
+      color: $accent;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: $transition;
+
+      &:hover,
+      &:focus {
+        opacity: 1;
+      }
+
+      &:disabled {
+        cursor: default;
+        opacity: 0.3;
+      }
+    }
+  }
+}
+
+// ===== BOTTOM SECTION =====
+.bottom {
+  background: $bg-secondary;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 16px;
+  box-shadow: $shadow;
+
+  .caption {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+
+    span {
+      font-weight: 600;
+      color: $accent;
+      margin-right: 6px;
+    }
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 614px) {
+  .feed-page {
+    padding: 12px 8px;
+  }
+
+  .posts {
+    border-radius: 4px;
+  }
+
+  .actions button {
+    font-size: 22px;
+    padding: 2px;
+  }
+
+  .user-header {
+    padding: 10px 12px;
+  }
+
+  .caption,
+  .likes,
+  .comments-preview,
+  .add-comment {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
+
+// ===== UTILITIES =====
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+// ===== ANIMATIONS =====
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.posts {
+  animation: fadeIn 0.3s ease-out;
+}

@@ -47,7 +47,7 @@ const Login = () => {
             name="password"
             placeholder="Enter password"
           />
-          <button type="submit">Login</button>
+          <button className="primary-button" type="submit">Login</button>
         </form>
         <p>
           Don't have an acount{" "}
