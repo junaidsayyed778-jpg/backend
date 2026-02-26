@@ -1,6 +1,6 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { PostContext } from "../pages/post.context";
-import { getFeed } from '../services/post.api.js';
+import { createPost, getFeed } from '../services/post.api.js';
 
 export const usePost = () => {
   const context = useContext(PostContext);
@@ -31,5 +31,25 @@ export const usePost = () => {
     }
   };
 
-  return { loading, feed, post, handleGetFeed };
+// 1. handleCreatePost mein error handling add karein
+const handleCreatePost = async(imageFile, caption) => {
+  try {
+      setLoading(true)
+      const data = await createPost(imageFile, caption)
+      setFeed([data.post, ...feed])
+      setLoading(false)
+  } catch (error) {
+    console.error("Failed to create post:", error)
+    alert("Failed to create post. Please try again.")
+  } finally {
+    setLoading(false)
+  }
+}
+
+// 2. useEffect mein cleanup/add dependency consideration
+useEffect(() => {
+  handleGetFeed()
+}, []) // ✅ Empty dependency array is fine for initial fetch
+
+  return { loading, feed, post, handleGetFeed, handleCreatePost};
 };

@@ -1,0 +1,156 @@
+// Instagram Inspired Variables
+$primary-color: #e62a1c; // Aapka diya hua Red
+$primary-hover: #c42518; // Red ka darker shade (Blue se behtar lagega)
+$bg-color: #0c0c0c;      // Instagram ka light gray background
+$text-color: #fffcfc;    // Instagram ka dark text
+$border-color: #dbdbdb;  // Instagram ka border color
+$white: #ffffff;
+$input-bg: #faf8f8;
+$radius: 4px;            // Instagram inputs thode sharp hote hain
+$button-radius: 8px;
+
+// Font Stack (System Fonts like Instagram)
+$font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+.create-post-page {
+  min-height: 100vh;
+  background-color: $bg-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: $font-stack;
+  color: $text-color;
+
+  .form-container {
+    text-align: center;
+    margin-bottom: 24px;
+    margin-top: 20px;
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0;
+      color: $text-color;
+      // Instagram logo style font weight
+    }
+  }
+
+  form {
+    background-color: $white;
+    border: 1px solid $border-color;
+    border-radius: $radius;
+    padding: 20px 40px;
+    width: 100%;
+    max-width: 400px; // Instagram mobile/web width vibe
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); // Very subtle shadow
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #8e8e8e;
+      margin-bottom: -8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    // File Input Styling (Cleaner look)
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      background-color: $input-bg;
+      border: 1px solid $border-color;
+      border-radius: $radius;
+      font-size: 0.9rem;
+      color: black;
+      cursor: pointer;
+      
+      &::file-selector-button {
+        background-color: $white;
+        border: 1px solid $border-color;
+        border-radius: $radius;
+        padding: 5px 10px;
+        margin-right: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      &::file-selector-button:hover {
+        background-color: #efefef;
+      }
+    }
+
+    // Text Input Styling (Instagram Style)
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 10px;
+      background-color: $input-bg;
+      border: 1px solid $border-color;
+      border-radius: $radius;
+      font-size: 1rem;
+      font-family: $font-stack;
+      color: black;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.2s;
+
+      &::placeholder {
+        color: #8e8e8e;
+      }
+
+      &:focus {
+        border-color: #a8a8a8;
+        background-color: $white;
+      }
+    }
+
+    // Button Styling (Instagram Action Button)
+    button {
+      &.primary-button {
+        background-color: $primary-color;
+        color: $white;
+        border: none;
+        padding: 12px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: $button-radius;
+        cursor: pointer;
+        width: 100%;
+        margin-top: 10px;
+        transition: opacity 0.2s, transform 0.1s;
+        text-transform: capitalize;
+        letter-spacing: 0.5px;
+
+        &:hover {
+          background-color: $primary-hover;
+          opacity: 0.9;
+        }
+
+        &:active {
+          transform: scale(0.98);
+        }
+        
+        // Disabled state style (optional but good for IG vibe)
+        &:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 480px) {
+    form {
+      padding: 20px;
+      max-width: 100%;
+      border: none; // Mobile pe often border hat jata hai
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  }
+}

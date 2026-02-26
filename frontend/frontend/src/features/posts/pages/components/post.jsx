@@ -18,7 +18,7 @@ const post = ({user, post}) => {
 
           {/* Post Image */}
           <img 
-            src={post.image} 
+            src={post.imageUrl} 
             alt="post" 
           />
 
@@ -35,7 +35,7 @@ const post = ({user, post}) => {
 
           {/* Caption */}
           <p className="caption">
-            <span>username</span> This is a clean Instagram-style caption with dark theme support 🌙
+            <span>{user.username}</span> {post.caption}
             <span className="timestamp">2 HOURS AGO</span>
           </p>
 
@@ -51,12 +51,7 @@ const post = ({user, post}) => {
           </div>
         </div>
 
-        {/* Additional Bottom Content (if needed) */}
-        <div className="bottom">
-          <p className='caption'>
-            <span>username</span> {user.caption}
-          </p>
-        </div>
+     
   </div>
   )
 }
