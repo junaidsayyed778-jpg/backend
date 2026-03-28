@@ -11,12 +11,7 @@ export async function getFeed(){
         const response = await api.get("/api/posts/feed");
         return response.data;
     } catch (error) {
-        console.error("❌ getFeed error:", {
-            message: error.message,
-            status: error.response?.status,
-            data: error.response?.data
-        });
-        throw error;
+    console.log(error)
     }
 }
 
@@ -73,5 +68,26 @@ export async function createPost(imageFile, caption){
             }
         });
         throw error;
+    }
+}
+
+// services/post.api.js
+export async function toggleLike(postId){
+    try{
+        const response = await api.post(`/api/posts/${postId}/like`);
+        return response.data;
+    } catch(err){
+        console.error("toggleLike error:", {
+            message: err.message,
+            status: err.response?.status,
+            data: err.response?.data,
+            config: {
+                url: err.config?.url,
+                method: err.config?.method
+            }
+        });
+        
+        
+        throw err;
     }
 }

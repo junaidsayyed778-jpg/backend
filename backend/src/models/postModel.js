@@ -1,24 +1,23 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
 
 const postSchema = new mongoose.Schema({
-    caption:{
-        type: String,
-        default: ""
-    },
+  caption: { type: String, maxlength: 2200, trim: true },
+  image: { type: String, required: true },
+  user: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'user', 
+    required: true 
+  },
+  
+  // ✅ Likes field - MUST be array of ObjectIds
+  likes: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'user' 
+  }],
+  likeCount: { type: Number, default: 0 }
+}, { 
+  timestamps: true 
+});
 
-    imageUrl:{
-        type: String,
-        required: [false, "Image is required for creating for post"]
-    },
-    user:{
-        ref: "user",
-        type:mongoose.Schema.Types.ObjectId,
-        required: [true, "User id is required to create post"]
-    },
-
-  likes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Users who liked
-  likeCount: { type: Number, default: 0 } 
-},{timestamps: true})
-
-const postModel = mongoose.model("post", postSchema)
+const postModel= mongoose.model('post', postSchema);
 module.exports = postModel

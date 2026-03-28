@@ -97,48 +97,128 @@ async function likePostController(req, res) {
   });
 }
 
-async function sendLikes(req, res) {
-  const { postId } = req.body;
+ const toggleLike = async (req, res) => {
+  try {
+    const { postId } = req.params;
+    
+    // 🔍 Debug logs
+    console.log('🔔 toggleLike called');
+    console.log('📦 req.params:', req.params);
+    console.log('👤 req.user:', req.user);
+    console.log('🆔 postId:', postId, 'Type:', typeof postId);
 
-  const existing = await like.findOne({
-    user: req.user.id,
-    post: postId,
-  });
+    // ✅ Validate postId format
+    if (!mongoose.Types.ObjectId.isValid(postId)) {
+      console.error('❌ Invalid ObjectId format:', postId);
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Invalid post ID format' 
+      });
+    }
 
-  if (existing) {
-    return res.status(400).json({
-      message: "Already requested",
+    // ✅ Check auth middleware ne user attach kiya
+    if (!req.user || !req.user.id) {
+      console.error('❌ User not authenticated. req.user:', req.user);
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Authentication required' 
+      });
+    }
+
+    const userId = req.user.id;
+    console.log('👤 userId from token:', userId);
+
+    // ✅ Find post - with detailed error handling
+    let post;
+    try {
+      post = await Post.findById(postId);
+      console.log('🔍 Post lookup result:', post ? 'Found' : 'Not found');
+    } catch (findError) {
+      console.error('❌ Error finding post:', findError.message);
+      return res.status(500).json({ 
+        success: false, 
+        message: 'Database error while finding post',
+        error: findError.message 
+      });
+    }
+    
+    if (!post) {
+      console.warn('⚠️ Post not found in DB:', postId);
+      return res.status(404).json({ 
+        success: false, 
+        message: 'Post not found' 
+      });
+    }
+
+    console.log('📄 Found post:', { 
+      _id: post._id, 
+      likes: post.likes, 
+      likeCount: post.likeCount,
+      likesType: Array.isArray(post.likes) ? 'array' : typeof post.likes
+    });
+
+    // ✅ Safe like check (toString() for ObjectId comparison)
+    const likesArray = Array.isArray(post.likes) ? post.likes : [];
+    const isLiked = likesArray.some(id => {
+      const idStr = id?.toString?.() || String(id);
+      const userStr = userId?.toString?.() || String(userId);
+      return idStr === userStr;
+    });
+
+    console.log('❤️ Like status check:', { isLiked, userId });
+
+    if (isLiked) {
+      // ❌ Unlike: Remove user from likes
+      post.likes = likesArray.filter(id => {
+        const idStr = id?.toString?.() || String(id);
+        const userStr = userId?.toString?.() || String(userId);
+        return idStr !== userStr;
+      });
+      post.likeCount = Math.max(0, (post.likeCount || 0) - 1);
+      console.log('➖ Unliked. New count:', post.likeCount);
+    } else {
+      // ❤️ Like: Add user (with duplicate prevention)
+      const alreadyExists = likesArray.some(id => {
+        const idStr = id?.toString?.() || String(id);
+        const userStr = userId?.toString?.() || String(userId);
+        return idStr === userStr;
+      });
+      
+      if (!alreadyExists) {
+        post.likes.push(userId);
+        post.likeCount = (post.likeCount || 0) + 1;
+        console.log('➕ Liked. New count:', post.likeCount);
+      }
+    }
+
+    // ✅ Save with validation
+    console.log('💾 Saving post...');
+    const updatedPost = await post.save();
+    console.log('✅ Post saved successfully');
+
+    res.status(200).json({
+      success: true,
+      liked: !isLiked,
+      likeCount: updatedPost.likeCount,
+      message: isLiked ? 'Post unliked' : 'Post liked'
+    });
+
+  } catch (error) {
+    // 🚨 FULL ERROR LOGGING
+    console.error('❌❌❌ toggleLike CRASHED ❌❌❌');
+    console.error('Error name:', error.name);
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    console.error('Error object:', JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+
+    res.status(500).json({
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong',
+      errorName: error.name
     });
   }
-  const like = await likeModel.create({
-    user: req.user.id,
-    post: postId,
-  });
-
-  res.json(like);
-}
-
-async function acceptLike(req, res) {
-  const { likeId } = req.params;
-
-  const like = await likeModel.findById(likeId);
-
-  if (!like)
-    return res.status(404).json({
-      message: "Not found",
-    });
-
-  if (like.status !== "ACCEPTED") {
-    like.status = "ACCEPTED";
-    await like.save();
-
-    await postModel.findByIdAndUpdate(like.post, {
-      $inc: { likeCount: 1 },
-    });
-  }
-
-  res.json({ message: "Like accepted" });
-}
+};
 
 async function getFeedController(req, res) {
 
@@ -165,7 +245,6 @@ module.exports = {
   getPostController,
   getPostDetails,
   likePostController,
-  sendLikes,
-  acceptLike,
+  toggleLike,
   getFeedController,
 };
